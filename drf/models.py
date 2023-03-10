@@ -1,11 +1,27 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
+# 1. название класса во множественном числе
+# 2. лучше унаследоваться от AbstractUser (чтоб не создавать доп. таблицу и постоянно дозапрашивать ее)
 class Users(models.Model):
-    user =      models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Юзер')
-    inn =       models.IntegerField(verbose_name='ИНН')
-    account =   models.FloatField(verbose_name='Счёт')
+    # 3. отступы не по pep
+    # 4. нейминг
+    user    = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Юзер')
+    # 4.1 inn не понятное название (просто транслит на русский, я бы уточнил у продукта,
+    # как правильно стоит это именовать, на английском)
+    inn     = models.IntegerField(verbose_name='ИНН')
+    # 4.2 Название не однозначное. Поле отражает кол-во денег на счету, а по названию складывается впечатление, что это fk
+    # на какую-то таблицу (account)
+    account = models.FloatField(verbose_name='Счёт')
 
     def __str__(self):
+        # 5. format в данном случае слишком многословен
+        # лучше использовать f строку f'{id} {inn}'
+        #  + метод __str__ имеет не очень понятный вывод, лучше будет (<User id=1 inn=123456>)
+        # или что то вроде того
         return '{id} {inn}'.format(id=str(self.id), inn=self.inn)
+
+# 6. не соблюдение ТЗ
+#   6.1 - инн должно быть уникальным
+#   6.2 - инн н может быть отрицательным
+#   6.3 - счет должн указываться с точностью до копеек (до 2х знаков полсле запятой)
