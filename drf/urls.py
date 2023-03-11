@@ -1,15 +1,9 @@
-from django.conf.urls import url
-from django.urls import include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import TransferViewSet
-
-
-router = DefaultRouter()
-router.register(r'transfer', TransferViewSet, basename='auth')
+from . import views
 
 
 urlpatterns = [
-    url(r'api/', include(router.urls)),
+    path('users', views.UsersList.as_view()),
+    path('transfer', views.MoneyTransfer.as_view()),
 ]
-

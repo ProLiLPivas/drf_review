@@ -1,8 +1,15 @@
 from rest_framework import serializers
 
-from .models import Users
+from . import models
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['id', 'username', 'inn', 'money_amount']
+
 
 class TransferSerializer(serializers.Serializer):
-    user_from = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all())
-    inn_to    = serializers.IntegerField()
-    amount    = serializers.FloatField()
+    amount = serializers.DecimalField(min_value=0, decimal_places=2, max_digits=64)
+    sender = serializers.IntegerField(min_value=0)
+    inns = serializers.ListSerializer(child=serializers.IntegerField(min_value=0))

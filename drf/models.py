@@ -1,11 +1,14 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from . import managers
 
-class Users(models.Model):
-    user =      models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Юзер')
-    inn =       models.IntegerField(verbose_name='ИНН')
-    account =   models.FloatField(verbose_name='Счёт')
+
+class User(AbstractUser):
+    inn = models.PositiveIntegerField(verbose_name='ИНН', unique=True)
+    money_amount = models.DecimalField(verbose_name='Счёт', decimal_places=2, max_digits=100)
+
+    manager = managers.UsersManager()
 
     def __str__(self):
-        return '{id} {inn}'.format(id=str(self.id), inn=self.inn)
+        return f'<User {self.username} inn={self.inn}>'
